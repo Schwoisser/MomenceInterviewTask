@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
 import { View, Text, ActivityIndicator,  FlatList, StyleSheet, TouchableOpacity, TextInput, } from 'react-native';
-import { useExchangeRates, CsvRow, CsvData } from '../api/queries';
+import { useExchangeRates, CsvRow } from '../api/queries';
 
-
+import styled from 'styled-components/native';
 
 
 const HomeScreen: React.FC = () => {
@@ -10,9 +10,10 @@ const HomeScreen: React.FC = () => {
   // Hooks
   const { data, isLoading, error } = useExchangeRates();
   const [selectedId, setSelectedId] = useState<string | null>(null);
+  const [selectedCurrency, setSelectedCurrency] = useState<string | null>(null);
   const [selectedExchangeRate, setSelectedExchangeRate] = useState<string | null>(null);
   const [czk_amount, onChangeInput] = useState('');
-  console.log("test");
+
   // Handle loading and error states
   if (isLoading) return <ActivityIndicator size="large" />;
   if (error) return <Text>Error: {error.message}</Text>;
@@ -31,19 +32,19 @@ const HomeScreen: React.FC = () => {
   };
 
   const ExchangeRateRadioButton = ({item, onPress, backgroundColor, textColor}: ItemProps) => (
-  <TouchableOpacity onPress={onPress} style={[styles.item, {backgroundColor}]}>
-    <Text style={[styles.title, {color: textColor}]}>{item[0] + " " + item[1] + " " + item[4]}</Text>
-  </TouchableOpacity>
+  <Item onPress={onPress} style={[{backgroundColor}]}>
+    <NormalText style={[{color: textColor}]}>{item[0] + " " + item[1] + " " + item[4]}</NormalText>
+  </Item>
   );
 
   const renderExchangeRateRadioButton = ({item}: {item: Array<String>}) => {
-    const backgroundColor = item[1] === selectedId ? '#aaaa' : '#dddd';
-    const color = item[1] === selectedId ? 'white' : 'black';
+    const backgroundColor = item[0] === selectedId ? '#aaaa' : '#dddd';
+    const color = item[0] === selectedId ? 'white' : 'black';
 
     return (
       <ExchangeRateRadioButton
         item={item}
-        onPress={() => {setSelectedId(String(item[1])); setSelectedExchangeRate(String(item[4])); } }
+        onPress={() => {setSelectedId(String(item[0])); setSelectedCurrency(String(item[1])); setSelectedExchangeRate(String(item[4])); } }
         backgroundColor={backgroundColor}
         textColor={color}
       />
@@ -64,57 +65,59 @@ const HomeScreen: React.FC = () => {
   }
 
   return (
-    <View style={styles.container}>
+    <Container>
       
-      <TextInput
-          style={styles.input}
+      <Input
           onChangeText={onChangeInput}
           value={czk_amount}
           keyboardType="numeric"
         />
-    <Text style={styles.selectedText}>Amount in {(selectedId || "none")}: {calculateExchangeRate()}</Text>
-    <Text style={styles.select_label}>Select a Currency:</Text>
+    <NormalText>Amount in {(selectedCurrency || "none")}: {calculateExchangeRate()}</NormalText>
+    <SelectLabel>Select a Currency:</SelectLabel>
     <FlatList       
         data={options}
         renderItem={renderExchangeRateRadioButton}
         keyExtractor={item => String(item[0] + item[4])}
         >
     </FlatList>
-    </View>
+    </Container>
   );
 };
 
 
 // Styles
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    padding: 16,
-    paddingVertical: 60,
-    backgroundColor: 'white',
-  },
-  item: {
-    paddingHorizontal: 16,
-    paddingVertical: 12,
-    marginVertical: 4,
-    borderRadius: 8,
-  },
-  select_label: {
-    marginTop:10,
-    fontSize: 16,
-  },
-  selectedText: {
-    fontSize: 16,
-    marginVertical: 8,
-  },
-  input: {
-    height: 40,
-    borderColor: 'gray',
-    borderWidth: 1,
-    marginVertical: 8,
-    paddingHorizontal: 8,
-  },
-});
+const Container = styled.View`
+  flex: 1;
+  
+  padding: 16px;
+  padding-vertical: 260px;
+  background-color: white;
+`;
+
+const Item = styled.TouchableOpacity`
+  padding-horizontal: 16px;
+  padding-vertical: 12px;
+  margin-vertical: 4px;
+  border-radius: 8px;
+`;
+
+const SelectLabel = styled.Text`
+  margin-top: 10px;
+  font-size: 16px;
+`;
+
+const NormalText = styled.Text`
+  font-size: 16px;
+  margin-vertical: 8px;
+`;
+
+const Input = styled.TextInput`
+  height: 40px;
+  border-color: gray;
+  border-width: 1px;
+  margin-vertical: 8px;
+  padding-horizontal: 8px;
+`;
 
 
 
