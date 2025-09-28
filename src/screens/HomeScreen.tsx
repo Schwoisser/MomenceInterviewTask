@@ -19,8 +19,7 @@ const HomeScreen: React.FC = () => {
 
 
   // Transform data to string[][]
-  const options: string[][] = data?.data
-  ? data?.data.slice(1).map((row:CsvRow) => Object.values(row)) // Convert each CsvRow to string[]
+  const options: string[][] = data?.data ? data?.data.slice(1).map((row:CsvRow) => Object.values(row)) // Convert each CsvRow to string[]
   : []; // Provide empty array if undefined
 
 
@@ -73,9 +72,8 @@ const HomeScreen: React.FC = () => {
           value={czk_amount}
           keyboardType="numeric"
         />
-    <Text style={styles.selectedText}>Exchange Rate: {calculateExchangeRate()}</Text>
-    <Text style={styles.selectedText}>Selected: {(selectedId || "none")}</Text>
-    <Text style={styles.title}>Select a Currency</Text>
+    <Text style={styles.selectedText}>Amount in {(selectedId || "none")}: {calculateExchangeRate()}</Text>
+    <Text style={styles.select_label}>Select a Currency:</Text>
     <FlatList       
         data={options}
         renderItem={renderExchangeRateRadioButton}
@@ -92,17 +90,18 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     padding: 16,
-    paddingTop: 60,
-    paddingBottom: 60,
+    paddingVertical: 60,
     backgroundColor: 'white',
   },
   item: {
-    padding: 16,
-    marginVertical: 8,
+    paddingHorizontal: 16,
+    paddingVertical: 12,
+    marginVertical: 4,
     borderRadius: 8,
   },
-  title: {
-    fontSize: 18,
+  select_label: {
+    marginTop:10,
+    fontSize: 16,
   },
   selectedText: {
     fontSize: 16,
