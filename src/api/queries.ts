@@ -7,7 +7,7 @@ interface ExchangeRates {
 
 // Define the response types
 export interface CsvRow {
-  [key: string]: string | number | boolean | null; // Flexible for various data types
+  [key: string]: string;
 }
 
 export interface CsvData {

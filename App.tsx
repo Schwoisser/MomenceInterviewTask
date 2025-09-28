@@ -1,31 +1,24 @@
-/**
- * Sample React Native App
- * https://github.com/facebook/react-native
- *
- * @format
- */
-
-import { NewAppScreen } from '@react-native/new-app-screen';
-import { StatusBar, StyleSheet, useColorScheme, View } from 'react-native';
+import { StatusBar, StyleSheet, useColorScheme, Text } from 'react-native';
 import {
   SafeAreaProvider,
-  useSafeAreaInsets,
 } from 'react-native-safe-area-context';
+import { QueryClientProvider} from '@tanstack/react-query';
+
 import HomeScreen from './src/screens/HomeScreen';
-import { QueryClient, QueryClientProvider, useQuery } from '@tanstack/react-query';
+import {queryClient} from './src/query/queryClient'
 
 
-const queryClient = new QueryClient()
+
 
 function App() {
-  const isDarkMode = useColorScheme() === 'light';
+  const isDarkMode = false;
 
   return (
     <SafeAreaProvider>
       <StatusBar barStyle={isDarkMode ? 'light-content' : 'dark-content'} />
       <QueryClientProvider client={queryClient}>
+        <Text>hhhds fadsf</Text>
         <HomeScreen />
-
       </QueryClientProvider>
     </SafeAreaProvider>
   );
